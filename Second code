@@ -1,0 +1,71 @@
+# ICTU Library management system with gui
+import tkinter as tk
+from tkinter import ttk
+
+class LibraryManagementSystem:
+    def __init__(self, master):
+        self.master = master
+        master.title("Library Management System")
+
+        # Create book data structure
+        self.books = [
+            {"title": "Book 1", "author": "Author 1", "available": True},
+            {"title": "Book 2", "author": "Author 2", "available": False},
+            {"title": "Book 3", "author": "Author 3", "available": True},
+        ]
+
+        # Create GUI elements
+        self.create_widgets()
+
+    def create_widgets(self):
+        # Create book list
+        self.book_list = ttk.Treeview(self.master)
+        self.book_list["columns"] = ("1", "2", "3")
+        self.book_list.column("#0", width=100)
+        self.book_list.column("1", width=200)
+        self.book_list.column("2", width=200)
+        self.book_list.column("3", width=100)
+        self.book_list.heading("#0", text="ID")
+        self.book_list.heading("1", text="Title")
+        self.book_list.heading("2", text="Author")
+        self.book_list.heading("3", text="Available")
+        self.book_list.grid(row=0, column=0, padx=10, pady=10)
+
+        # Populate book list
+        for i, book in enumerate(self.books):
+            self.book_list.insert("", "end", text=str(i+1), values=(book["title"], book["author"], "Yes" if book["available"] else "No"))
+
+        # Create buttons
+        self.borrow_button = tk.Button(self.master, text="Borrow Book", command=self.borrow_book)
+        self.borrow_button.grid(row=1, column=0, padx=10, pady=10)
+
+        self.return_button = tk.Button(self.master, text="Return Book", command=self.return_book)
+        self.return_button.grid(row=2, column=0, padx=10, pady=10)
+
+    def borrow_book(self):
+        selected = self.book_list.selection()
+        if selected:
+            item_id = self.book_list.item(selected[0], "text")
+            book = self.books[int(item_id) - 1]
+            if book["available"]:
+                book["available"] = False
+                self.book_list.item(selected[0], values=(book["title"], book["author"], "No"))
+                print(f"Borrowed book: {book['title']}")
+            else:
+                print(f"Book '{book['title']}' is not available.")
+
+    def return_book(self):
+        selected = self.book_list.selection()
+        if selected:
+            item_id = self.book_list.item(selected[0], "text")
+            book = self.books[int(item_id) - 1]
+            if not book["available"]:
+                book["available"] = True
+                self.book_list.item(selected[0], values=(book["title"], book["author"], "Yes"))
+                print(f"Returned book: {book['title']}")
+            else:
+                print(f"Book '{book['title']}' is already available.")
+
+root = tk.Tk()
+app = LibraryManagementSystem(root)
+root.mainloop()
