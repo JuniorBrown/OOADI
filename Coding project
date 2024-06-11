@@ -1,1 +1,62 @@
+# ICTU Library Management System
 
+class Book:
+    def __init__(self, title, author, isbn, available):
+        self.title = title
+        self.author = author
+        self.isbn = isbn
+        self.available = available
+
+class Library:
+    def __init__(self):
+        self.books = []
+
+    def add_book(self, book):
+        self.books.append(book)
+
+    def remove_book(self, book):
+        self.books.remove(book)
+
+    def search_book(self, title=None, author=None, isbn=None):
+        results = []
+        for book in self.books:
+            if title and title.lower() in book.title.lower():
+                results.append(book)
+            elif author and author.lower() in book.author.lower():
+                results.append(book)
+            elif isbn and str(isbn) in str(book.isbn):
+                results.append(book)
+        return results
+
+    def check_out_book(self, book):
+        if book.available:
+            book.available = False
+            print(f"You have checked out '{book.title}' by {book.author}.")
+        else:
+            print(f"Sorry, '{book.title}' by {book.author} is not available.")
+
+    def return_book(self, book):
+        if not book.available:
+            book.available = True
+            print(f"Thank you for returning '{book.title}' by {book.author}.")
+        else:
+            print(f"'{book.title}' by {book.author} is already available.")
+
+# Example usage
+library = Library()
+
+book1 = Book("To Kill a Mockingbird", "Harper Lee", 978-0-06-093546-7, True)
+book2 = Book("The Great Gatsby", "F. Scott Fitzgerald", 978-0-7432-7356-5, True)
+book3 = Book("1984", "George Orwell", 978-0-451-52493-5, False)
+
+library.add_book(book1)
+library.add_book(book2)
+library.add_book(book3)
+
+print("Available books:")
+for book in library.books:
+    if book.available:
+        print(f"{book.title} by {book.author}")
+
+library.check_out_book(book1)
+library.return_book(book1)
