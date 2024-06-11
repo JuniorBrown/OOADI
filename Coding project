@@ -1,4 +1,4 @@
-# ICTU Library Management System
+# ICTU Library Management System wothout gui
 
 class Book:
     def __init__(self, title, author, isbn, available):
